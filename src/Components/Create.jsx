@@ -1,43 +1,50 @@
 import { nanoid } from 'nanoid'
-import { useState } from 'react'
+import { useForm, useFormContext } from 'react-hook-form';
+import { toast } from 'react-toastify';
 
 
 const create = (props) => {
     const todos = props.todos;
     const settodos = props.settodos;
 
-    const [title, settitle] = useState("")
 
-    const submitHandler = (e) => {
-        e.preventDefault();
+    const {
+        register,
+        handleSubmit,
+        reset,
+        formState: { errors },
+    } = useForm();
 
-        const newtodo = {
-            id: nanoid(),
-            title: title,
-            isCompleted: false
-        }
+const submitHandler = (data) => {
+    data.isCompleted = false;
+    data.id = nanoid();
 
-        const copyTodos = [...todos]
-        copyTodos.push(newtodo)
-        settodos(copyTodos)
+    const copytodos = [...todos];
+    copytodos.push(data);
+    settodos(copytodos);
 
-        settitle("");
+    toast.success("Todo Created")
+
+    reset();
     };
 
     return (
         <div className=" w-[60%] p-10">
             <h1 className="mb-10 text-7xl font-thin">
                 Set <span className='text-red-500'>Reminder</span> for <br /> tasks</h1>
-            <form onSubmit={submitHandler}>
+            <form onSubmit={handleSubmit(submitHandler)}>
                 <input
+                    {...register("title" , { required: "title can not be empty"})}
                     className="p-4 border-b w-full text-3xl font-thin outline-0"
-                    value={title}
-                    onChange={(e) => settitle(e.target.value)}
                     type="text"
                     placeholder='title' />
+ 
+                    <small className='font-thin text-red-400 text-2xl'>{errors?.title?.message}</small>
                 <br />
                 <br />
-                <button className="mt-10 text-3xl px-15 py-4 border-2 rounded-xl cursor-pointer">create todo</button>
+                <button className="mt-10 text-3xl px-15 py-4 border-2 rounded-xl cursor-pointer">
+                    create todo
+                </button>
             </form>
         </div>
     )

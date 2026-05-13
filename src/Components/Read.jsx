@@ -1,3 +1,5 @@
+import { toast } from "react-toastify";
+
 const read = (props) => {
     const todos = props.todos;
     const settodos = props.settodos;
@@ -15,11 +17,13 @@ const read = (props) => {
     const deleteHandler = (id) => {
         const filtertodo = todos.filter((todo) => todo.id != id)
         settodos(filtertodo)
+        toast.error("Todo Deleted!")
     }
 
     return (
         <div className="w-[40%] p-10">
-            <h1 className="mb-10 text-7xl font-thin"> <span className="text-pink-400">Panding </span>Todos</h1>
+            <h1 className="mb-10 text-7xl font-thin"> <span className="text-pink-400">
+                Panding </span>Todos</h1>
             <ol>{renderTodos}</ol>
         </div>
     )
